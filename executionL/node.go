@@ -22,12 +22,12 @@ go func() {
 	
 	fmt.Println("...")
 for {
-	fmt.Println("sexsux")
+	fmt.Println("xxx")
 	
 	fmt.Println("lll")
 	wg.Add(1)
 	conn,err:=  n.Listener.Accept()
-	fmt.Println("chodbhangda")
+	fmt.Println("chchchchchhc")
 	if err != nil {
 		log.Fatal(err)
 		continue

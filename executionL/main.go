@@ -6,13 +6,13 @@ import ("fmt"
 
 func main() { 
 
-	nodeA := Node{Id:"NodeA",Address:"127.0.0.1:3000",Peers :make(map[string]*Peer),IdToPeerMap :make(map[string]*net.Conn),}
+	nodeA := Node{Id:"NodeA",Address:"127.0.0.1:3000",Peers :make(map[string]*Peer),IdToPeerMap :make(map[string]*net.Conn),Kademlia : make([]*Node,k_length),}
 // if _,_,err :=	nodeA.CreateListener("tcp") ; err != nil {
 // 	panic(err)
 // }
 
 //	fmt.Println(nodeA.Peers,nodeA.Listener.Addr())
-	nodeB := Node{Id:"NodeB",Address:"127.0.0.1:3001",Peers:make(map[string]*Peer),IdToPeerMap : make(map[string]*net.Conn),}
+	nodeB := Node{Id:"NodeB",Address:"127.0.0.1:3001",Peers:make(map[string]*Peer),IdToPeerMap : make(map[string]*net.Conn),Kademlia : make([]*Node,k_length),}
 peerFilled,errr :=	nodeB.CreateListener("tcp") 
 	
 if errr != nil {
@@ -37,5 +37,5 @@ if err :=	nodeA.DialToOtherNode("tcp","127.0.0.1:3001"); err!= nil {
 	// 	"hello"	}
 	//nodeA.SendATypeMsgToAPeer(mssg,nodeA.Peers)
 	<-ch
-	fmt.Println(nodeB.IdToPeerMap["NodeA"])
+	fmt.Println(nodeA.IdToPeerMap["NodeB"])
 }

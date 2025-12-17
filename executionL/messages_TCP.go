@@ -7,11 +7,9 @@ package main
 
 const (
 	MSG_HELLO uint8 = 0x01
-	MSG_REQUEST_PEERS uint8 = 0x02
-	MSG_SEND_PEERS uint8 = 0x03
-	
+	MSG_RET_HELLO uint8 = 0x02
 )
-
+//messaging using tcp , implementing a hello immediately after getting connected 
 func(msg *Message ) Serialize() []byte {
 	var buf bytes.Buffer
 	encoder := gob.NewEncoder(&buf)
@@ -54,12 +52,10 @@ if adddata == "msg handleing strtd via accept" {
 			fmt.Println(Msg.Data)
 			go n.HandleHello(Msg , conn )
 			fmt.Println("called handle hello..")
-			
-			//
-		case MSG_REQUEST_PEERS:
-			//
-		case MSG_SEND_PEERS:
-			//
+	
+		case MSG_RET_HELLO:
+			fmt.Println("msg sent by" , Msg.Data)
+			go n.HandleReturnHello(Msg , conn)
 		}
 
 	}
@@ -68,10 +64,21 @@ if adddata == "msg handleing strtd via accept" {
 func(n *Node) HandleHello(msg Message , conn net.Conn) {
 	
 	fmt.Println("handling hello...")
-	ch <- true
+	
 	pr := n.Peers[conn.RemoteAddr().String()]
 	pr.Id = msg.Data
 	n.IdToPeerMap[msg.Data] = &conn
+	go n.ReturnHello(conn)
 	
-	
+}
+func(n *Node) ReturnHello(conn net.Conn) {
+msg := Message{MSG_RET_HELLO , n.Id}
+	n.SendATypeMsgToAPeer(msg, conn)
+}
+func(n *Node) HandleReturnHello(msg Message , conn net.Conn) {
+	fmt.Println("handling return hello for " , n.Id)
+ pr := n.Peers[conn.RemoteAddr().String()]
+  pr.Id = msg.Data
+  n.IdToPeerMap[msg.Data] = &conn
+  ch <- true
 }
